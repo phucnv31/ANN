@@ -18,16 +18,23 @@ namespace pinball
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            for (int i = 0; i < 5; i++)
+            FileIO fileIO = new FileIO();
+            DataGame[] lstDataGame = new DataGame[5];
+            ANN NeuralNetwork = new ANN(ref lstDataGame);
+            NeuralNetwork.createFirstGeneration();
+            for (int i = 0; i < lstDataGame.Length-1; i++)
             {
-                var thread= new Thread(App);
-                thread.Start();
+                Task.Run(() =>
+                {
+                    App(ref NeuralNetwork,fileIO,i);
+                });
+                Thread.Sleep(1000);
             }
-            Application.Run(new Form1());
+            Application.Run(new Form1(ref NeuralNetwork,fileIO,lstDataGame.Length-1));
         }
-        static void App()
+        static void App(ref ANN network,FileIO fileIO,int gameIndex)
         {
-            Application.Run(new Form1());
+            Application.Run(new Form1(ref network, fileIO,gameIndex));
         }
     }
 }

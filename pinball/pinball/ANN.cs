@@ -37,7 +37,7 @@ namespace pinball
             }
         }
 
-        DataGame game;
+        public DataGame[] lstgame { set; get; }
         Random r = new Random();
 
         static int inputSize, hiddenSize, outputSize;
@@ -53,9 +53,9 @@ namespace pinball
         Mutex mmfMutex = null;
 
 
-        public ANN(DataGame game)
+        public ANN(ref DataGame[] lstgame)
         {
-            this.game = game;
+            this.lstgame = lstgame;
         }
 
         // spawns the first generation of birds (w/ random weights)
@@ -87,15 +87,15 @@ namespace pinball
         }
 
         float min = float.MaxValue;
-        float minTowerY = 1, maxTowerY = 1;
-        float distanceToTower = 0;
-        float minDistanceToTower = 0;
+        //float minTowerY = 1, maxTowerY = 1;
+        //float distanceToTower = 0;
+        //float minDistanceToTower = 0;
 
-        float centerPos = 0;
+        //float centerPos = 0;
 
         // called by the game's update() method
         // returns: true if the bird should jump, false otherwise
-        public bool runForward()
+        public bool runForward(int gameIndex)
         {
             min = float.MaxValue;
 
@@ -118,9 +118,9 @@ namespace pinball
             // the inputs for the neural network
             input = new double[1, inputSize];
 
-            input[0, 0] = game.VanPositionX;
-            input[0, 1] = game.BongPosition.X;
-            input[0, 2] = game.BongPosition.Y;
+            input[0, 0] = lstgame[gameIndex].VanPositionX;
+            input[0, 1] = lstgame[gameIndex].BongPosition.X;
+            input[0, 2] = lstgame[gameIndex].BongPosition.Y;
 
             // computing the inputs & outputs for the hidden layer
             double[,] hiddenInputs = multiplyArrays(input, weightsList[crtIndex].weights1);
@@ -239,17 +239,17 @@ namespace pinball
 
         double CROSSOVER_RATE = 0.8;
         double MUTATION_RATE = 0.05;
-        int POPULATION_SIZE = 25;
+        int POPULATION_SIZE = 5;
 
         float averageFitness = 0;
         float maxFitness = 0;
         int generation = 0;
 
-        public void breedNetworks()
+        public void breedNetworks(int gameIndex)
         {
 
             // updates the score
-            weightsList[crtIndex].fitness = game.GameTime + game.Score*2;
+            weightsList[crtIndex].fitness = lstgame[gameIndex].GameTime + lstgame[gameIndex].Score*2;
 
             averageFitness += weightsList[crtIndex].fitness;
             maxFitness = maxFitness > weightsList[crtIndex].fitness ? maxFitness : weightsList[crtIndex].fitness;
@@ -313,7 +313,6 @@ namespace pinball
                     {
                         mmfMutex = new Mutex(true, "Global\\mmfMutex");
                         nextWeightsList.AddRange(weightsList.Take(3));
-
                         mmfMutex.ReleaseMutex();
                     }
 

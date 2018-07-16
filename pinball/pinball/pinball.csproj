@@ -69,6 +69,7 @@
     <Compile Include="Dan3.cs" />
     <Compile Include="DataGame.cs" />
     <Compile Include="DataSharer.cs" />
+    <Compile Include="FileIO.cs" />
     <Compile Include="Food.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
