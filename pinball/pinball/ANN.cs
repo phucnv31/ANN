@@ -46,7 +46,7 @@ namespace pinball
         List<WeightsInfo> weightsList = new List<WeightsInfo>();
         List<WeightsInfo> nextWeightsList = new List<WeightsInfo>();
 
-        int crtIndex = 0;
+        //int crtIndex = 0;
 
         //// this is for sharing data between processes
         DataSharer dataSharer = new DataSharer();
@@ -123,11 +123,11 @@ namespace pinball
             input[0, 2] = lstgame[gameIndex].BongPosition.Y;
 
             // computing the inputs & outputs for the hidden layer
-            double[,] hiddenInputs = multiplyArrays(input, weightsList[crtIndex].weights1);
+            double[,] hiddenInputs = multiplyArrays(input, weightsList[gameIndex].weights1);
             double[,] hiddenOutputs = applySigmoid(hiddenInputs);
 
             // then the final output
-            output = applySigmoid(multiplyArrays(hiddenOutputs, weightsList[crtIndex].weights2));
+            output = applySigmoid(multiplyArrays(hiddenOutputs, weightsList[gameIndex].weights2));
 
 
 
@@ -226,14 +226,21 @@ namespace pinball
 
             while (i1 == i2)
             {
-                i1 = r.Next(0, weightsList.Count / 3);
-                i2 = r.Next(0, weightsList.Count / 3);
+                i1 = r.Next(0, weightsList.Count -1);
+                i2 = r.Next(0, weightsList.Count -1);
             }
-
-            if (weightsList[i1].fitness > weightsList[i2].fitness)
-                return weightsList[i1];
-            else
-                return weightsList[i2];
+            try
+            {
+                if (weightsList[i1].fitness > weightsList[i2].fitness)
+                    return weightsList[i1];
+                else
+                    return weightsList[i2];
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.StackTrace);
+                throw;
+            }
         }
 
 
@@ -249,17 +256,14 @@ namespace pinball
         {
 
             // updates the score
-            weightsList[crtIndex].fitness = lstgame[gameIndex].GameTime + lstgame[gameIndex].Score*2;
+            weightsList[gameIndex].fitness = lstgame[gameIndex].GameTime + lstgame[gameIndex].Score*2;
 
-            averageFitness += weightsList[crtIndex].fitness;
-            maxFitness = maxFitness > weightsList[crtIndex].fitness ? maxFitness : weightsList[crtIndex].fitness;
+            averageFitness += weightsList[gameIndex].fitness;
+            maxFitness = maxFitness > weightsList[gameIndex].fitness ? maxFitness : weightsList[gameIndex].fitness;
 
 
-            if (crtIndex + 1 < weightsList.Count)
-                crtIndex++;
-            else
+            if(FileIO.IsAllGameFailed())
             {
-                crtIndex = 0;
                 generation++;
 
                 Debug.WriteLine("GEN: " + generation + " | AVG: " + averageFitness / (float)POPULATION_SIZE + " | MAX: " + maxFitness);
@@ -270,7 +274,7 @@ namespace pinball
                 weightsList = weightsList.OrderByDescending(wi => wi.fitness).ToList();
 
                 // starting with a large mutation rate so there's will be more solutions to choose from
-                if (weightsList[0].fitness < 200)
+                if (weightsList[0].fitness < 10000)
                     MUTATION_RATE = 0.9;
                 else
                     MUTATION_RATE = 0.05;
@@ -282,7 +286,7 @@ namespace pinball
                     try
                     {
                         if (mmfMutex == null)
-                            mmfMutex = Mutex.OpenExisting("Global\\mmfMutex");
+                            mmfMutex = Mutex.OpenExisting("mmfMutex");
 
                         if (mmfMutex.WaitOne())
                         {
@@ -311,13 +315,13 @@ namespace pinball
                     }
                     catch (WaitHandleCannotBeOpenedException ex)
                     {
-                        mmfMutex = new Mutex(true, "Global\\mmfMutex");
+                        mmfMutex = new Mutex(true, "mmfMutex");
                         nextWeightsList.AddRange(weightsList.Take(3));
                         mmfMutex.ReleaseMutex();
                     }
 
                     // adding elites to the next generation
-                    nextWeightsList.AddRange(weightsList.Take(3));
+                    nextWeightsList.AddRange(weightsList.Take(2));
                 }
 
                 // creating a new generation 

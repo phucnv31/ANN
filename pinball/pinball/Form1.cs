@@ -47,16 +47,14 @@ namespace pinball
         Bong bong = new Bong();
         Boolean right = false, left = false;
         ANN network;
-        FileIO fileIO;
         Stopwatch watch;
-        public Form1(ref ANN network, FileIO fileIO, int gameIndex)
+        public Form1(ref ANN network, int gameIndex)
         {
             InitializeComponent();
             food = new Food(randFood);
             superfood = new SuperFood();
             baditem = new Bad_Item(randBaditem);
             this.network = network;
-            this.fileIO = fileIO;
             this.gameIndex = gameIndex;
             watch = Stopwatch.StartNew();
         }
@@ -90,7 +88,7 @@ namespace pinball
             if (food.foodRec.IntersectsWith(baditem.baditemRec)) { baditem.baditemLocation(randBaditem); }
             if (superfood.superfoodRec.IntersectsWith(baditem.baditemRec)) { baditem.baditemLocation(randBaditem); }
             // nếu bóng_bay chạy hết form thì thua
-            if (bongbay.bongbayRec[0].X >= 280) { Restart(); fileIO.WriteGameState(gameIndex, true); }
+            if (bongbay.bongbayRec[0].X >= 280) {  FileIO.WriteGameState(gameIndex, true); Restart(); }
             //nếu 100<=điểm<200 timerbongbay=true
             if (score >= 100 && score < 200 && stopdraw == false) { timerbongbay.Enabled = true; }
             //neu 200<=diem<400 cho stopdraw=false
@@ -159,11 +157,11 @@ namespace pinball
                 if (s == 2 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X <= 276) { bong.drawbongRun2(); }
                 else if (bong.bongRec[0].Y - 1 < 23 && s == 2) { s = 3; } else if (bong.bongRec[0].X + 1 > 276 && s == 2) { s = 1; }
                 if (s == 3 && bong.bongRec[0].X <= 280 && bong.bongRec[0].Y <= 302) { bong.drawbongRun3(); }
-                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; } else if (bong.bongRec[0].Y + 1 > 303 && s == 3) { Restart(); fileIO.WriteGameState(gameIndex, true); }
+                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; } else if (bong.bongRec[0].Y + 1 > 303 && s == 3) {  FileIO.WriteGameState(gameIndex, true); Restart(); }
                 if (s == 1 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X >= 1) { bong.drawbongRun1(); }
                 else if (bong.bongRec[0].Y - 1 < 23 && s == 1) { s = 4; } else if (bong.bongRec[0].X - 1 < 1 && s == 1) { s = 2; }
                 if (s == 4 && bong.bongRec[0].Y <= 303 && bong.bongRec[0].X >= 1) { bong.drawbongRun4(); }
-                else if (bong.bongRec[0].Y + 1 > 303 && s == 4) { Restart(); fileIO.WriteGameState(gameIndex, true); } else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
+                else if (bong.bongRec[0].Y + 1 > 303 && s == 4) {  FileIO.WriteGameState(gameIndex, true); Restart(); } else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
             }
             //va chạm bên trái chan bay
             if (bong.bongRec[0].Right.Equals(chanbay.chanbayRec[0].Left + 1) && bong.bongRec[0].IntersectsWith(chanbay.chanbayRec[0]) && s == 2) { s = 1; }
@@ -195,11 +193,11 @@ namespace pinball
                 if (s == 2 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X <= 276) { bong.drawbongRun2(); }
                 else if (bong.bongRec[0].Y - 1 < 23 && s == 2) { s = 3; } else if (bong.bongRec[0].X + 1 > 276 && s == 2) { s = 1; }
                 if (s == 3 && bong.bongRec[0].X <= 280 && bong.bongRec[0].Y <= 302) { bong.drawbongRun3(); }
-                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; } else if (bong.bongRec[0].Y + 1 > 303 && s == 3) { Restart(); fileIO.WriteGameState(gameIndex, true); }
+                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; } else if (bong.bongRec[0].Y + 1 > 303 && s == 3) {  FileIO.WriteGameState(gameIndex, true); Restart(); }
                 if (s == 1 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X >= 1) { bong.drawbongRun1(); }
                 else if (bong.bongRec[0].Y - 1 < 23 && s == 1) { s = 4; } else if (bong.bongRec[0].X - 1 < 1 && s == 1) { s = 2; }
                 if (s == 4 && bong.bongRec[0].Y <= 303 && bong.bongRec[0].X >= 1) { bong.drawbongRun4(); }
-                else if (bong.bongRec[0].Y + 1 > 303 && s == 4) { Restart(); fileIO.WriteGameState(gameIndex, true); } else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
+                else if (bong.bongRec[0].Y + 1 > 303 && s == 4) {FileIO.WriteGameState(gameIndex, true); Restart(); } else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
             }//xet va cham lan 2 cho chan bay
             if (bong.bongRec[0].Right.Equals(chanbay.chanbayRec[0].Left + 1) && bong.bongRec[0].IntersectsWith(chanbay.chanbayRec[0]) && s == 2) { s = 1; }
             if (bong.bongRec[0].Right.Equals(chanbay.chanbayRec[0].Left + 1) && bong.bongRec[0].IntersectsWith(chanbay.chanbayRec[0]) && s == 3) { s = 4; }
@@ -260,7 +258,9 @@ namespace pinball
             if (e.KeyData == Keys.R) { timer1.Enabled = true; }
             if (e.KeyData == Keys.Space && tatspace == true)
             {
+                FileIO.WriteGameState(gameIndex, false);
                 timer1.Enabled = true;
+                watch = Stopwatch.StartNew();
                 left = false; right = false;
                 start.Text = "";
                 tatspace = false;
@@ -335,21 +335,27 @@ namespace pinball
             van = new Van();
             diem.Text = "Điểm:";
             network.breedNetworks(gameIndex);
-            //while (true)
-            //{
-            //    if (fileIO.IsAllGameFailed())
-            //    {
-            //        Thread.Sleep(1000);
-            //        timer1.Enabled = true;
-            //        left = false; right = false;
-            //        start.Text = "";
-            //        tatspace = false;
-                    
-            //        fileIO.InitState();
-            //        break;
-            //    }
-            //}
-            
+            while (true)
+            {
+                if (FileIO.IsAllGameFailed())
+                {
+                    //for (int i = 0; i < 5; i++)
+                    //{
+                    //    if (gameIndex == i)
+                    //    {
+                    //        Thread.Sleep(i * 200);
+                    //    }
+                    //}
+                    timer1.Enabled = true;
+                    left = false; right = false;
+                    start.Text = "";
+                    tatspace = false;
+                    FileIO.InitState();
+                    break;
+                }
+                Thread.Sleep(50);
+            }
+
         }
     }
 }

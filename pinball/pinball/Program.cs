@@ -18,7 +18,7 @@ namespace pinball
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            FileIO fileIO = new FileIO();
+            FileIO.InitState();
             DataGame[] lstDataGame = new DataGame[5];
             ANN NeuralNetwork = new ANN(ref lstDataGame);
             NeuralNetwork.createFirstGeneration();
@@ -26,15 +26,15 @@ namespace pinball
             {
                 Task.Run(() =>
                 {
-                    App(ref NeuralNetwork,fileIO,i);
+                    App(ref NeuralNetwork,i);
                 });
                 Thread.Sleep(1000);
             }
-            Application.Run(new Form1(ref NeuralNetwork,fileIO,lstDataGame.Length-1));
+            Application.Run(new Form1(ref NeuralNetwork,lstDataGame.Length-1));
         }
-        static void App(ref ANN network,FileIO fileIO,int gameIndex)
+        static void App(ref ANN network,int gameIndex)
         {
-            Application.Run(new Form1(ref network, fileIO,gameIndex));
+            Application.Run(new Form1(ref network,gameIndex));
         }
     }
 }
