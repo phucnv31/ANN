@@ -13,6 +13,7 @@ namespace pinball
         public int GameTime { set; get; }
         public int VanPositionX { set; get; }
         public Point BongPosition { set; get; }
+        public static List<bool> GameState=new List<bool>();
         public DataGame()
         {
             Score = 0;
@@ -26,6 +27,25 @@ namespace pinball
             this.GameTime = gameTime;
             this.VanPositionX = vanPositionX;
             this.BongPosition = bongPosition;
+        }
+        public static void InnitGameState(int populationSize)
+        {
+            GameState.Clear();
+            for (int i = 0; i < populationSize; i++)
+            {
+                GameState.Add(true);
+            }
+        }
+        public static bool IsAllGameFailed()
+        {
+            return GameState.All(x => x == false);
+        }
+        public static void ResetGameState()
+        {
+            for (int i = 0; i < GameState.Count; i++)
+            {
+                GameState[i] = true;
+            }
         }
     }
 }

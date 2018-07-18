@@ -18,8 +18,9 @@ namespace pinball
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            FileIO.InitState();
-            DataGame[] lstDataGame = new DataGame[5];
+            int populationSize = 10;
+            DataGame.InnitGameState(populationSize);
+            DataGame[] lstDataGame = new DataGame[populationSize];
             ANN NeuralNetwork = new ANN(ref lstDataGame);
             NeuralNetwork.createFirstGeneration();
             for (int i = 0; i < lstDataGame.Length-1; i++)

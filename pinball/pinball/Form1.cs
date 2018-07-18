@@ -11,6 +11,7 @@ using NeuronDotNet.Core;
 using NeuronDotNet.Core.Backpropagation;
 using System.Diagnostics;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace pinball
 {
@@ -88,7 +89,7 @@ namespace pinball
             if (food.foodRec.IntersectsWith(baditem.baditemRec)) { baditem.baditemLocation(randBaditem); }
             if (superfood.superfoodRec.IntersectsWith(baditem.baditemRec)) { baditem.baditemLocation(randBaditem); }
             // nếu bóng_bay chạy hết form thì thua
-            if (bongbay.bongbayRec[0].X >= 280) {  FileIO.WriteGameState(gameIndex, true); Restart(); }
+            if (bongbay.bongbayRec[0].X >= 280) { DataGame.GameState[gameIndex] = false; Restart(); }
             //nếu 100<=điểm<200 timerbongbay=true
             if (score >= 100 && score < 200 && stopdraw == false) { timerbongbay.Enabled = true; }
             //neu 200<=diem<400 cho stopdraw=false
@@ -155,13 +156,25 @@ namespace pinball
             if (timer1.Enabled == true)
             {
                 if (s == 2 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X <= 276) { bong.drawbongRun2(); }
-                else if (bong.bongRec[0].Y - 1 < 23 && s == 2) { s = 3; } else if (bong.bongRec[0].X + 1 > 276 && s == 2) { s = 1; }
+                else if (bong.bongRec[0].Y - 1 < 23 && s == 2) { s = 3; }
+                else if (bong.bongRec[0].X + 1 > 276 && s == 2) { s = 1; }
                 if (s == 3 && bong.bongRec[0].X <= 280 && bong.bongRec[0].Y <= 302) { bong.drawbongRun3(); }
-                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; } else if (bong.bongRec[0].Y + 1 > 303 && s == 3) {  FileIO.WriteGameState(gameIndex, true); Restart(); }
+                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; }
+                else if (bong.bongRec[0].Y + 1 > 303 && s == 3)
+                {
+                    DataGame.GameState[gameIndex] = false;
+                    Restart();
+                }
                 if (s == 1 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X >= 1) { bong.drawbongRun1(); }
-                else if (bong.bongRec[0].Y - 1 < 23 && s == 1) { s = 4; } else if (bong.bongRec[0].X - 1 < 1 && s == 1) { s = 2; }
+                else if (bong.bongRec[0].Y - 1 < 23 && s == 1) { s = 4; }
+                else if (bong.bongRec[0].X - 1 < 1 && s == 1) { s = 2; }
                 if (s == 4 && bong.bongRec[0].Y <= 303 && bong.bongRec[0].X >= 1) { bong.drawbongRun4(); }
-                else if (bong.bongRec[0].Y + 1 > 303 && s == 4) {  FileIO.WriteGameState(gameIndex, true); Restart(); } else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
+                else if (bong.bongRec[0].Y + 1 > 303 && s == 4)
+                {
+                    DataGame.GameState[gameIndex] = false;
+                    Restart();
+                }
+                else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
             }
             //va chạm bên trái chan bay
             if (bong.bongRec[0].Right.Equals(chanbay.chanbayRec[0].Left + 1) && bong.bongRec[0].IntersectsWith(chanbay.chanbayRec[0]) && s == 2) { s = 1; }
@@ -191,13 +204,25 @@ namespace pinball
             if (timer1.Enabled == true)
             {
                 if (s == 2 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X <= 276) { bong.drawbongRun2(); }
-                else if (bong.bongRec[0].Y - 1 < 23 && s == 2) { s = 3; } else if (bong.bongRec[0].X + 1 > 276 && s == 2) { s = 1; }
+                else if (bong.bongRec[0].Y - 1 < 23 && s == 2) { s = 3; }
+                else if (bong.bongRec[0].X + 1 > 276 && s == 2) { s = 1; }
                 if (s == 3 && bong.bongRec[0].X <= 280 && bong.bongRec[0].Y <= 302) { bong.drawbongRun3(); }
-                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; } else if (bong.bongRec[0].Y + 1 > 303 && s == 3) {  FileIO.WriteGameState(gameIndex, true); Restart(); }
+                else if (bong.bongRec[0].X + 1 > 276 && s == 3) { s = 4; }
+                else if (bong.bongRec[0].Y + 1 > 303 && s == 3)
+                {
+                    DataGame.GameState[gameIndex] = false;
+                    Restart();
+                }
                 if (s == 1 && bong.bongRec[0].Y >= 23 && bong.bongRec[0].X >= 1) { bong.drawbongRun1(); }
-                else if (bong.bongRec[0].Y - 1 < 23 && s == 1) { s = 4; } else if (bong.bongRec[0].X - 1 < 1 && s == 1) { s = 2; }
+                else if (bong.bongRec[0].Y - 1 < 23 && s == 1) { s = 4; }
+                else if (bong.bongRec[0].X - 1 < 1 && s == 1) { s = 2; }
                 if (s == 4 && bong.bongRec[0].Y <= 303 && bong.bongRec[0].X >= 1) { bong.drawbongRun4(); }
-                else if (bong.bongRec[0].Y + 1 > 303 && s == 4) {FileIO.WriteGameState(gameIndex, true); Restart(); } else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
+                else if (bong.bongRec[0].Y + 1 > 303 && s == 4)
+                {
+                    DataGame.GameState[gameIndex] = false;
+                    Restart();
+                }
+                else if (bong.bongRec[0].X - 1 < 1 && s == 4) { s = 3; }
             }//xet va cham lan 2 cho chan bay
             if (bong.bongRec[0].Right.Equals(chanbay.chanbayRec[0].Left + 1) && bong.bongRec[0].IntersectsWith(chanbay.chanbayRec[0]) && s == 2) { s = 1; }
             if (bong.bongRec[0].Right.Equals(chanbay.chanbayRec[0].Left + 1) && bong.bongRec[0].IntersectsWith(chanbay.chanbayRec[0]) && s == 3) { s = 4; }
@@ -258,7 +283,7 @@ namespace pinball
             if (e.KeyData == Keys.R) { timer1.Enabled = true; }
             if (e.KeyData == Keys.Space && tatspace == true)
             {
-                FileIO.WriteGameState(gameIndex, false);
+                DataGame.GameState[gameIndex] = true;
                 timer1.Enabled = true;
                 watch = Stopwatch.StartNew();
                 left = false; right = false;
@@ -313,7 +338,6 @@ namespace pinball
 
         void Restart()
         {
-            watch.Reset();
             isRestart = true;
             timer1.Enabled = false;
             timerdanbay.Enabled = false;
@@ -337,25 +361,45 @@ namespace pinball
             network.breedNetworks(gameIndex);
             while (true)
             {
-                if (FileIO.IsAllGameFailed())
+                if (DataGame.IsAllGameFailed())
                 {
-                    //for (int i = 0; i < 5; i++)
-                    //{
-                    //    if (gameIndex == i)
-                    //    {
-                    //        Thread.Sleep(i * 200);
-                    //    }
-                    //}
+                    Thread.Sleep(500);
+                    DataGame.ResetGameState();
+                    for (int i = 0; i < 5; i++)
+                    {
+                        if (gameIndex == i)
+                        {
+                            Thread.Sleep(i * 200);
+                        }
+                    }
+                    watch = Stopwatch.StartNew();
                     timer1.Enabled = true;
                     left = false; right = false;
                     start.Text = "";
                     tatspace = false;
-                    FileIO.InitState();
+                    //SendKey("B");
                     break;
                 }
                 Thread.Sleep(50);
             }
 
         }
+        [DllImport("User32.dll")]
+        static extern int SetForegroundWindow(IntPtr point);
+        private void SendKey(string key)
+        {
+            Process[] lstProcess = Process.GetProcesses();
+            lstProcess = lstProcess.Where(x => x.MainWindowTitle.Contains("game")).ToArray();
+            foreach (var process in lstProcess)
+            {
+                if (process != null)
+                {
+                    IntPtr h = process.MainWindowHandle;
+                    SetForegroundWindow(h);
+                    SendKeys.SendWait(key);
+                }
+            }
+        }
+
     }
 }

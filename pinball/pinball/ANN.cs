@@ -226,8 +226,8 @@ namespace pinball
 
             while (i1 == i2)
             {
-                i1 = r.Next(0, weightsList.Count -1);
-                i2 = r.Next(0, weightsList.Count -1);
+                i1 = r.Next(0, weightsList.Count /2);
+                i2 = r.Next(0, weightsList.Count /2);
             }
             try
             {
@@ -244,9 +244,9 @@ namespace pinball
         }
 
 
-        double CROSSOVER_RATE = 0.8;
+        double CROSSOVER_RATE = 0.9;
         double MUTATION_RATE = 0.05;
-        int POPULATION_SIZE = 5;
+        int POPULATION_SIZE = 10;
 
         float averageFitness = 0;
         float maxFitness = 0;
@@ -262,7 +262,7 @@ namespace pinball
             maxFitness = maxFitness > weightsList[gameIndex].fitness ? maxFitness : weightsList[gameIndex].fitness;
 
 
-            if(FileIO.IsAllGameFailed())
+            if(DataGame.IsAllGameFailed())
             {
                 generation++;
 
@@ -316,12 +316,12 @@ namespace pinball
                     catch (WaitHandleCannotBeOpenedException ex)
                     {
                         mmfMutex = new Mutex(true, "mmfMutex");
-                        nextWeightsList.AddRange(weightsList.Take(3));
+                        nextWeightsList.AddRange(weightsList.Take(4));
                         mmfMutex.ReleaseMutex();
                     }
 
                     // adding elites to the next generation
-                    nextWeightsList.AddRange(weightsList.Take(2));
+                    nextWeightsList.AddRange(weightsList.Take(3));
                 }
 
                 // creating a new generation 
