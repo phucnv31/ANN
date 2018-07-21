@@ -21,7 +21,7 @@ namespace pinball
             int populationSize = 10;
             DataGame.InnitGameState(populationSize);
             DataGame[] lstDataGame = new DataGame[populationSize];
-            ANN NeuralNetwork = new ANN(ref lstDataGame);
+            ANN NeuralNetwork = new ANN(ref lstDataGame,populationSize);
             NeuralNetwork.createFirstGeneration();
             for (int i = 0; i < lstDataGame.Length-1; i++)
             {

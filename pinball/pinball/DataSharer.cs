@@ -16,8 +16,8 @@ namespace pinball
 
         public void writeToMemoryMap(pinball.ANN.WeightsInfo weightsInfo)
         {
-            const int MMF_MAX_SIZE = 1024;
-            const int MMF_VIEW_SIZE = 1024;
+            const int MMF_MAX_SIZE = 1024*5;
+            const int MMF_VIEW_SIZE = 1024*5;
 
             if (mmf == null)
                 mmf = MemoryMappedFile.CreateOrOpen("mmf1", MMF_MAX_SIZE, MemoryMappedFileAccess.ReadWrite);
@@ -34,7 +34,7 @@ namespace pinball
 
         public ANN.WeightsInfo getFromMemoryMap()
         {
-            const int MMF_VIEW_SIZE = 1024;
+            const int MMF_VIEW_SIZE = 1024*5;
 
             ANN.WeightsInfo weightsInfo = null;
 

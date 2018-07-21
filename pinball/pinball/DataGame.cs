@@ -38,7 +38,14 @@ namespace pinball
         }
         public static bool IsAllGameFailed()
         {
-            return GameState.All(x => x == false);
+            try
+            {
+                return GameState.All(x => x == false);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         public static void ResetGameState()
         {

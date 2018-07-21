@@ -257,7 +257,7 @@ namespace pinball
                     dan3 = new Dan3();
                 }
             }
-            gameTime = (int)watch.ElapsedMilliseconds;
+            gameTime = watch.Elapsed.Seconds;
             network.lstgame[gameIndex] = new DataGame(score, gameTime, van.vanRec[0].X, new Point(bong.bongRec[0].X, bong.bongRec[0].Y));
             if (network.runForward(gameIndex))
                 van.moveLeftvan();
