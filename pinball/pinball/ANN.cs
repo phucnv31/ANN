@@ -13,12 +13,6 @@ namespace pinball
         [Serializable]
         public class WeightsInfo
         {
-            //// hidden layer weights
-            //public double[,] weights1;
-
-            //// output layer weights
-            //public double[,] weights2;
-
             public List<double[,]> lstWeight;
             // score
             public float fitness;
@@ -54,9 +48,7 @@ namespace pinball
 
         List<WeightsInfo> weightsList = new List<WeightsInfo>();
         List<WeightsInfo> nextWeightsList = new List<WeightsInfo>();
-
-        //int crtIndex = 0;
-
+        
         //// this is for sharing data between processes
         DataSharer dataSharer = new DataSharer();
         Mutex mmfMutex = null;
@@ -107,35 +99,10 @@ namespace pinball
                 }
             }
         }
-
-        float min = float.MaxValue;
-        //float minTowerY = 1, maxTowerY = 1;
-        //float distanceToTower = 0;
-        //float minDistanceToTower = 0;
-
-        //float centerPos = 0;
-
         // called by the game's update() method
         // returns: true if the bird should jump, false otherwise
         public bool runForward(int gameIndex)
         {
-            min = float.MaxValue;
-
-            // indentifies the closest tower
-            //for (int i = 0; i < game.tower1.Count; i++)
-            //{
-            //    distanceToTower = Math.Abs(game.tower1[i].towerPosition.X - game.floppy_bird.birdPosition.X - game.floppy_bird.birdRectangle.Width);
-
-            //    if (distanceToTower < min)
-            //    {
-            //        min = distanceToTower;
-            //        minDistanceToTower = distanceToTower;
-            //        maxTowerY = game.tower2[i].towerPosition.Y;
-            //        minTowerY = maxTowerY - game.difference;
-
-            //        centerPos = (maxTowerY + minTowerY) / 2;
-            //    }
-            //}
 
             // the inputs for the neural network
             input = new double[1, inputSize];
@@ -155,9 +122,6 @@ namespace pinball
             // then the final output
             output = applySigmoid(multiplyArrays(hiddenOutputs, weightsList[gameIndex].lstWeight[weightsList[gameIndex].lstWeight.Count-1]));
 
-
-
-
             return output[0, 0] > 0.5;
 
 
@@ -175,18 +139,6 @@ namespace pinball
                         gene.Add(weightsInfo.lstWeight[k][i, j]);
                     }
             }
-            /////
-            //for (int i = 0; i < weightsInfo.weights1.GetLength(0); i++)
-            //    for (int j = 0; j < weightsInfo.weights1.GetLength(1); j++)
-            //    {
-            //        gene.Add(weightsInfo.weights1[i, j]);
-            //    }
-
-            //for (int i = 0; i < weightsInfo.weights2.GetLength(0); i++)
-            //    for (int j = 0; j < weightsInfo.weights2.GetLength(1); j++)
-            //    {
-            //        gene.Add(weightsInfo.weights2[i, j]);
-            //    }
         }
 
         void decode(WeightsInfo weightsInfo, List<double> gene)
@@ -200,20 +152,6 @@ namespace pinball
                         gene.RemoveAt(0);
                     }
             }
-            //////
-            //for (int i = 0; i < weightsInfo.weights1.GetLength(0); i++)
-            //    for (int j = 0; j < weightsInfo.weights1.GetLength(1); j++)
-            //    {
-            //        weightsInfo.weights1[i, j] = gene[0];
-            //        gene.RemoveAt(0);
-            //    }
-
-            //for (int i = 0; i < weightsInfo.weights2.GetLength(0); i++)
-            //    for (int j = 0; j < weightsInfo.weights2.GetLength(1); j++)
-            //    {
-            //        weightsInfo.weights2[i, j] = gene[0];
-            //        gene.RemoveAt(0);
-            //    }
         }
 
         // creates a new candidate solution using crossover
